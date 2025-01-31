@@ -6,9 +6,9 @@ info:
 paths:
   /v1/shop/categories/:
     get:
-      operationId: v1_shop_categories_retrieve
+      operationId: shop_categories_retrieve
       tags:
-      - v1
+      - Category
       security:
       - jwtAuth: []
       - {}
@@ -17,12 +17,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Category'
-          description: ''
+                $ref: '#/components/schemas/PaginatedCategorySerializerResponse'
+          description: Paginated list of categories
     post:
-      operationId: v1_shop_categories_create
+      operationId: shop_categories_create
       tags:
-      - v1
+      - Category
       requestBody:
         content:
           application/json:
@@ -47,7 +47,7 @@ paths:
           description: ''
   /v1/shop/categories/{id}/:
     get:
-      operationId: v1_shop_categories_retrieve_2
+      operationId: shop_categories_retrieve_2
       parameters:
       - in: path
         name: id
@@ -56,10 +56,9 @@ paths:
           format: uuid
         required: true
       tags:
-      - v1
+      - Category
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -68,7 +67,7 @@ paths:
                 $ref: '#/components/schemas/Category'
           description: ''
     put:
-      operationId: v1_shop_categories_update
+      operationId: shop_categories_update
       parameters:
       - in: path
         name: id
@@ -77,7 +76,7 @@ paths:
           format: uuid
         required: true
       tags:
-      - v1
+      - Category
       requestBody:
         content:
           application/json:
@@ -92,7 +91,6 @@ paths:
         required: true
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -101,7 +99,7 @@ paths:
                 $ref: '#/components/schemas/Category'
           description: ''
     delete:
-      operationId: v1_shop_categories_destroy
+      operationId: shop_categories_destroy
       parameters:
       - in: path
         name: id
@@ -110,32 +108,30 @@ paths:
           format: uuid
         required: true
       tags:
-      - v1
+      - Category
       security:
       - jwtAuth: []
-      - {}
       responses:
         '204':
           description: No response body
   /v1/shop/customers/:
     get:
-      operationId: v1_shop_customers_retrieve
+      operationId: shop_customers_retrieve
       tags:
-      - v1
+      - Customer
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Customer'
-          description: ''
+                $ref: '#/components/schemas/PaginatedCustomerSerializerResponse'
+          description: Paginated list of customers
     post:
-      operationId: v1_shop_customers_create
+      operationId: shop_customers_create
       tags:
-      - v1
+      - Customer
       requestBody:
         content:
           application/json:
@@ -147,10 +143,8 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/Customer'
-        required: true
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -160,7 +154,7 @@ paths:
           description: ''
   /v1/shop/customers/{id}/:
     get:
-      operationId: v1_shop_customers_retrieve_2
+      operationId: shop_customers_retrieve_2
       parameters:
       - in: path
         name: id
@@ -169,10 +163,9 @@ paths:
           format: uuid
         required: true
       tags:
-      - v1
+      - Customer
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -181,7 +174,7 @@ paths:
                 $ref: '#/components/schemas/Customer'
           description: ''
     put:
-      operationId: v1_shop_customers_update
+      operationId: shop_customers_update
       parameters:
       - in: path
         name: id
@@ -190,7 +183,7 @@ paths:
           format: uuid
         required: true
       tags:
-      - v1
+      - Customer
       requestBody:
         content:
           application/json:
@@ -202,10 +195,8 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/Customer'
-        required: true
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -214,7 +205,7 @@ paths:
                 $ref: '#/components/schemas/Customer'
           description: ''
     delete:
-      operationId: v1_shop_customers_destroy
+      operationId: shop_customers_destroy
       parameters:
       - in: path
         name: id
@@ -223,32 +214,30 @@ paths:
           format: uuid
         required: true
       tags:
-      - v1
+      - Customer
       security:
       - jwtAuth: []
-      - {}
       responses:
         '204':
           description: No response body
   /v1/shop/orders/:
     get:
-      operationId: v1_shop_orders_retrieve
+      operationId: shop_orders_retrieve
       tags:
-      - v1
+      - Order
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Order'
-          description: ''
+                $ref: '#/components/schemas/PaginatedOrderSerializerResponse'
+          description: Paginated list of orders
     post:
-      operationId: v1_shop_orders_create
+      operationId: shop_orders_create
       tags:
-      - v1
+      - Order
       requestBody:
         content:
           application/json:
@@ -263,7 +252,6 @@ paths:
         required: true
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -273,7 +261,7 @@ paths:
           description: ''
   /v1/shop/orders/{id}/:
     get:
-      operationId: v1_shop_orders_retrieve_2
+      operationId: shop_orders_retrieve_2
       parameters:
       - in: path
         name: id
@@ -282,10 +270,9 @@ paths:
           format: uuid
         required: true
       tags:
-      - v1
+      - Order
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -294,7 +281,7 @@ paths:
                 $ref: '#/components/schemas/Order'
           description: ''
     put:
-      operationId: v1_shop_orders_update
+      operationId: shop_orders_update
       parameters:
       - in: path
         name: id
@@ -303,7 +290,7 @@ paths:
           format: uuid
         required: true
       tags:
-      - v1
+      - Order
       requestBody:
         content:
           application/json:
@@ -318,7 +305,6 @@ paths:
         required: true
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -327,7 +313,7 @@ paths:
                 $ref: '#/components/schemas/Order'
           description: ''
     delete:
-      operationId: v1_shop_orders_destroy
+      operationId: shop_orders_destroy
       parameters:
       - in: path
         name: id
@@ -336,32 +322,30 @@ paths:
           format: uuid
         required: true
       tags:
-      - v1
+      - Order
       security:
       - jwtAuth: []
-      - {}
       responses:
         '204':
           description: No response body
   /v1/shop/products/:
     get:
-      operationId: v1_shop_products_retrieve
+      operationId: shop_products_retrieve
       tags:
-      - v1
+      - Product
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Product'
-          description: ''
+                $ref: '#/components/schemas/PaginatedProductSerializerResponse'
+          description: Paginated list of products
     post:
-      operationId: v1_shop_products_create
+      operationId: shop_products_create
       tags:
-      - v1
+      - Product
       requestBody:
         content:
           application/json:
@@ -376,7 +360,6 @@ paths:
         required: true
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -386,7 +369,7 @@ paths:
           description: ''
   /v1/shop/products/{id}/:
     get:
-      operationId: v1_shop_products_retrieve_2
+      operationId: shop_products_retrieve_2
       parameters:
       - in: path
         name: id
@@ -395,10 +378,9 @@ paths:
           format: uuid
         required: true
       tags:
-      - v1
+      - Product
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -407,7 +389,7 @@ paths:
                 $ref: '#/components/schemas/Product'
           description: ''
     put:
-      operationId: v1_shop_products_update
+      operationId: shop_products_update
       parameters:
       - in: path
         name: id
@@ -416,7 +398,7 @@ paths:
           format: uuid
         required: true
       tags:
-      - v1
+      - Product
       requestBody:
         content:
           application/json:
@@ -431,7 +413,6 @@ paths:
         required: true
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -440,7 +421,7 @@ paths:
                 $ref: '#/components/schemas/Product'
           description: ''
     delete:
-      operationId: v1_shop_products_destroy
+      operationId: shop_products_destroy
       parameters:
       - in: path
         name: id
@@ -449,21 +430,20 @@ paths:
           format: uuid
         required: true
       tags:
-      - v1
+      - Product
       security:
       - jwtAuth: []
-      - {}
       responses:
         '204':
           description: No response body
   /v1/user/token/:
     post:
-      operationId: v1_user_token_create
+      operationId: user_token_create
       description: |-
         Takes a set of user credentials and returns an access and refresh JSON web
         token pair to prove the authentication of those credentials.
       tags:
-      - v1
+      - user
       requestBody:
         content:
           application/json:
@@ -485,12 +465,12 @@ paths:
           description: ''
   /v1/user/token/refresh/:
     post:
-      operationId: v1_user_token_refresh_create
+      operationId: user_token_refresh_create
       description: |-
         Takes a refresh type JSON web token and returns an access type JSON web
         token if the refresh token is valid.
       tags:
-      - v1
+      - user
       requestBody:
         content:
           application/json:
@@ -512,12 +492,12 @@ paths:
           description: ''
   /v1/user/token/verify/:
     post:
-      operationId: v1_user_token_verify_create
+      operationId: user_token_verify_create
       description: |-
         Takes a token and indicates if it is valid.  This view provides no
         information about a token's fitness for a particular use.
       tags:
-      - v1
+      - user
       requestBody:
         content:
           application/json:
@@ -539,28 +519,46 @@ paths:
           description: ''
   /v1/user/users/:
     get:
-      operationId: v1_user_users_retrieve
+      operationId: user_users_retrieve
       tags:
-      - v1
+      - User
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserSerializerResponse'
+          description: Paginated list of users
     post:
-      operationId: v1_user_users_create
+      operationId: user_users_create
       tags:
-      - v1
+      - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+        required: true
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUser'
+          description: ''
   /v1/user/users/{id}/:
     get:
-      operationId: v1_user_users_retrieve_2
+      operationId: user_users_retrieve_2
       parameters:
       - in: path
         name: id
@@ -569,15 +567,18 @@ paths:
           format: uuid
         required: true
       tags:
-      - v1
+      - User
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
     put:
-      operationId: v1_user_users_update
+      operationId: user_users_update
       parameters:
       - in: path
         name: id
@@ -586,15 +587,30 @@ paths:
           format: uuid
         required: true
       tags:
-      - v1
+      - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+        required: true
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
     delete:
-      operationId: v1_user_users_destroy
+      operationId: user_users_destroy
       parameters:
       - in: path
         name: id
@@ -603,23 +619,26 @@ paths:
           format: uuid
         required: true
       tags:
-      - v1
+      - User
       security:
       - jwtAuth: []
-      - {}
       responses:
         '204':
           description: No response body
   /v1/user/users/me/:
     get:
-      operationId: v1_user_users_me_retrieve
+      operationId: user_users_me_retrieve
       tags:
-      - v1
+      - User
       security:
       - jwtAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
 components:
   schemas:
     Category:
@@ -644,6 +663,34 @@ components:
       - id
       - name
       - slug
+    CreateUser:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 255
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+        first_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        last_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        image:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+      required:
+      - email
+      - password
     Customer:
       type: object
       properties:
@@ -652,8 +699,9 @@ components:
           format: uuid
           readOnly: true
         user:
-          type: string
-          format: uuid
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
       required:
       - id
       - user
@@ -698,6 +746,96 @@ components:
       - id
       - products
       - updated_at
+    PaginatedCategorySerializerResponse:
+      type: object
+      properties:
+        page:
+          type: integer
+        per_page:
+          type: integer
+        count:
+          type: integer
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+      required:
+      - count
+      - page
+      - per_page
+      - results
+    PaginatedCustomerSerializerResponse:
+      type: object
+      properties:
+        page:
+          type: integer
+        per_page:
+          type: integer
+        count:
+          type: integer
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Customer'
+      required:
+      - count
+      - page
+      - per_page
+      - results
+    PaginatedOrderSerializerResponse:
+      type: object
+      properties:
+        page:
+          type: integer
+        per_page:
+          type: integer
+        count:
+          type: integer
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+      required:
+      - count
+      - page
+      - per_page
+      - results
+    PaginatedProductSerializerResponse:
+      type: object
+      properties:
+        page:
+          type: integer
+        per_page:
+          type: integer
+        count:
+          type: integer
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+      required:
+      - count
+      - page
+      - per_page
+      - results
+    PaginatedUserSerializerResponse:
+      type: object
+      properties:
+        page:
+          type: integer
+        per_page:
+          type: integer
+        count:
+          type: integer
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+      required:
+      - count
+      - page
+      - per_page
+      - results
     Product:
       type: object
       properties:
@@ -748,6 +886,58 @@ components:
           writeOnly: true
       required:
       - token
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        last_login:
+          type: string
+          format: date-time
+          nullable: true
+        is_superuser:
+          type: boolean
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 255
+        is_admin:
+          type: boolean
+        is_staff:
+          type: boolean
+        first_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        last_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        image:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+        groups:
+          type: array
+          items:
+            type: integer
+          description: The groups this user belongs to. A user will get all permissions
+            granted to each of their groups.
+        user_permissions:
+          type: array
+          items:
+            type: integer
+          description: Specific permissions for this user.
+      required:
+      - email
+      - id
   securitySchemes:
     jwtAuth:
       type: http

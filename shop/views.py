@@ -66,13 +66,25 @@ class ProductDetail(AuthenticatedAPIView):
 
 
 @extend_schema(tags=["Category"])
+@extend_schema_view(
+    get=extend_schema(
+        responses={
+            200: get_paginated_response_schema(
+                CategorySerializer, "Paginated list of categories"
+            ),
+        }
+    ),
+)
 class CategoryList(APIView):
     serializer_class = CategorySerializer
+    pagination_class = StandardPagination
 
     def get(self, request, format=None):
-        categories = Category.objects.all()
+        paginator = self.pagination_class()
+        categories = paginator.paginate_queryset(Category.objects.all(), request)
         serializer = self.serializer_class(categories, many=True)
-        return Response(serializer.data, status=200)
+        response = paginator.get_paginated_response(serializer.data)
+        return Response(response, status=200)
 
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)

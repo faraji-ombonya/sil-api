@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
-from user.serializers import UserSerializer
 from shop.models import Category, Product, Order, Customer
+from user.serializers import UserSerializer
+from utils.helpers import get_category_tree
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -11,9 +12,18 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    categories = CategorySerializer(many=True, read_only=True)
+
     class Meta:
         model = Product
-        fields = "__all__"
+        exclude = ["category"]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["categories"] = CategorySerializer(
+            get_category_tree(instance.category), many=True
+        ).data
+        return representation
 
 
 class OrderSerializer(serializers.ModelSerializer):
