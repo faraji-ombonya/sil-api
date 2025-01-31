@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -16,17 +16,19 @@ from utils.helpers import get_paginated_response_schema
 
 
 @extend_schema(tags=["Product"])
-class ProductList(AuthenticatedAPIView):
-    serializer_class = ProductSerializer
-    pagination_class = StandardPagination
-
-    @extend_schema(
+@extend_schema_view(
+    get=extend_schema(
         responses={
             200: get_paginated_response_schema(
                 ProductSerializer, "Paginated list of products"
             ),
         }
-    )
+    ),
+)
+class ProductList(AuthenticatedAPIView):
+    serializer_class = ProductSerializer
+    pagination_class = StandardPagination
+
     def get(self, request, format=None):
         paginator = self.pagination_class()
         products = paginator.paginate_queryset(Product.objects.all(), request)
@@ -102,17 +104,19 @@ class CategoryDetail(AuthenticatedAPIView):
 
 
 @extend_schema(tags=["Order"])
-class OrderList(AuthenticatedAPIView):
-    serializer_class = OrderSerializer
-    pagination_class = StandardPagination
-
-    @extend_schema(
+@extend_schema_view(
+    get=extend_schema(
         responses={
             200: get_paginated_response_schema(
                 OrderSerializer, "Paginated list of orders"
             ),
         }
-    )
+    ),
+)
+class OrderList(AuthenticatedAPIView):
+    serializer_class = OrderSerializer
+    pagination_class = StandardPagination
+
     def get(self, request, format=None):
         paginator = self.pagination_class()
         orders = paginator.paginate_queryset(Order.objects.all(), request)
@@ -150,17 +154,19 @@ class OrderDetail(AuthenticatedAPIView):
 
 
 @extend_schema(tags=["Customer"])
-class CustomerList(AuthenticatedAPIView):
-    serializer_class = CustomerSerializer
-    pagination_class = StandardPagination
-
-    @extend_schema(
+@extend_schema_view(
+    get=extend_schema(
         responses={
             200: get_paginated_response_schema(
                 CustomerSerializer, "Paginated list of customers"
             ),
         }
-    )
+    ),
+)
+class CustomerList(AuthenticatedAPIView):
+    serializer_class = CustomerSerializer
+    pagination_class = StandardPagination
+
     def get(self, request, format=None):
         paginator = self.pagination_class()
         customers = paginator.paginate_queryset(Customer.objects.all(), request)
