@@ -11,7 +11,12 @@ from shop.serializers import (
 )
 
 
-class ProductList(APIView):
+from user.views import AuthenticatedAPIView
+
+
+class ProductList(AuthenticatedAPIView):
+    serializer_class = ProductSerializer
+
     def get(self, request, format=None):
         page = request.GET.get("page", 1)
         per_page = request.GET.get("per_page", 10)
@@ -36,7 +41,9 @@ class ProductList(APIView):
         return Response(serializer.errors, status=400)
 
 
-class ProductDetail(APIView):
+class ProductDetail(AuthenticatedAPIView):
+    serializer_class = ProductSerializer
+
     def get(self, request, pk, format=None):
         product = get_object_or_404(Product, pk=pk)
         serializer = ProductSerializer(product)
@@ -56,6 +63,8 @@ class ProductDetail(APIView):
 
 
 class CategoryList(APIView):
+    serializer_class = CategorySerializer
+
     def get(self, request, format=None):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
@@ -69,7 +78,9 @@ class CategoryList(APIView):
         return Response(serializer.errors, status=400)
 
 
-class CategoryDetail(APIView):
+class CategoryDetail(AuthenticatedAPIView):
+    serializer_class = CategorySerializer
+
     def get(self, request, pk, format=None):
         category = get_object_or_404(Category, pk=pk)
         serializer = CategorySerializer(category)
@@ -88,7 +99,9 @@ class CategoryDetail(APIView):
         return Response(status=204)
 
 
-class OrderList(APIView):
+class OrderList(AuthenticatedAPIView):
+    serializer_class = OrderSerializer
+
     def get(self, request, format=None):
         page = request.GET.get("page", 1)
         per_page = request.GET.get("per_page", 10)
@@ -113,7 +126,9 @@ class OrderList(APIView):
         return Response(serializer.errors, status=400)
 
 
-class OrderDetail(APIView):
+class OrderDetail(AuthenticatedAPIView):
+    serializer_class = OrderSerializer
+
     def get(self, request, pk, format=None):
         order = get_object_or_404(Order, pk=pk)
         serializer = OrderSerializer(order)
@@ -132,7 +147,9 @@ class OrderDetail(APIView):
         return Response(status=204)
 
 
-class CustomerList(APIView):
+class CustomerList(AuthenticatedAPIView):
+    serializer_class = CustomerSerializer
+
     def get(self, request, format=None):
         page = request.GET.get("page", 1)
         per_page = request.GET.get("per_page", 10)
@@ -157,7 +174,9 @@ class CustomerList(APIView):
         return Response(serializer.errors, status=400)
 
 
-class CustomerDetail(APIView):
+class CustomerDetail(AuthenticatedAPIView):
+    serializer_class = CustomerSerializer
+
     def get(self, request, pk, format=None):
         customer = get_object_or_404(Customer, pk=pk)
         serializer = CustomerSerializer(customer)

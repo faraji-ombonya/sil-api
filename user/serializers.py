@@ -1,11 +1,12 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import get_user_model
 
 from user.models import User
+from utils.serializers import CustomPaginationSerializer
 
 
-class UserSerializer(ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         exclude = ["password"]
@@ -20,7 +21,7 @@ class UserSerializer(ModelSerializer):
         return ret
 
 
-class LeanUserSerializer(ModelSerializer):
+class LeanUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = [
@@ -32,10 +33,10 @@ class LeanUserSerializer(ModelSerializer):
         ]
 
 
-class CreateUserSerializer(ModelSerializer):
+class CreateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = "__all__"
+        fields = ["email", "password", "first_name", "last_name", "image"]
 
         extra_kwargs = {"password": {"write_only": True}}
 
@@ -50,3 +51,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         token["user_claims"] = {"id": str(user.id)}
         return token
+
+
+class UserPaginationSerializer(CustomPaginationSerializer):
+    results = serializers.ListSerializer(child=UserSerializer())

@@ -218,4 +218,8 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Shop API",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
+    "SCHEMA_PATH_PREFIX": "/v1/",
+    "SWAGGER_UI_SETTINGS": {
+        "persistAuthorization": True,
+    },
 }

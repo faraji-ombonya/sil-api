@@ -6,28 +6,48 @@ info:
 paths:
   /v1/shop/categories/:
     get:
-      operationId: shop_categories_retrieve
+      operationId: v1_shop_categories_retrieve
       tags:
-      - shop
+      - v1
       security:
       - jwtAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
     post:
-      operationId: shop_categories_create
+      operationId: v1_shop_categories_create
       tags:
-      - shop
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Category'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Category'
+        required: true
       security:
       - jwtAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
   /v1/shop/categories/{id}/:
     get:
-      operationId: shop_categories_retrieve_2
+      operationId: v1_shop_categories_retrieve_2
       parameters:
       - in: path
         name: id
@@ -36,15 +56,19 @@ paths:
           format: uuid
         required: true
       tags:
-      - shop
+      - v1
       security:
       - jwtAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
     put:
-      operationId: shop_categories_update
+      operationId: v1_shop_categories_update
       parameters:
       - in: path
         name: id
@@ -53,15 +77,31 @@ paths:
           format: uuid
         required: true
       tags:
-      - shop
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Category'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Category'
+        required: true
       security:
       - jwtAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
     delete:
-      operationId: shop_categories_destroy
+      operationId: v1_shop_categories_destroy
       parameters:
       - in: path
         name: id
@@ -70,7 +110,7 @@ paths:
           format: uuid
         required: true
       tags:
-      - shop
+      - v1
       security:
       - jwtAuth: []
       - {}
@@ -79,28 +119,48 @@ paths:
           description: No response body
   /v1/shop/customers/:
     get:
-      operationId: shop_customers_retrieve
+      operationId: v1_shop_customers_retrieve
       tags:
-      - shop
+      - v1
       security:
       - jwtAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+          description: ''
     post:
-      operationId: shop_customers_create
+      operationId: v1_shop_customers_create
       tags:
-      - shop
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Customer'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Customer'
+        required: true
       security:
       - jwtAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+          description: ''
   /v1/shop/customers/{id}/:
     get:
-      operationId: shop_customers_retrieve_2
+      operationId: v1_shop_customers_retrieve_2
       parameters:
       - in: path
         name: id
@@ -109,15 +169,19 @@ paths:
           format: uuid
         required: true
       tags:
-      - shop
+      - v1
       security:
       - jwtAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+          description: ''
     put:
-      operationId: shop_customers_update
+      operationId: v1_shop_customers_update
       parameters:
       - in: path
         name: id
@@ -126,15 +190,31 @@ paths:
           format: uuid
         required: true
       tags:
-      - shop
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Customer'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Customer'
+        required: true
       security:
       - jwtAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+          description: ''
     delete:
-      operationId: shop_customers_destroy
+      operationId: v1_shop_customers_destroy
       parameters:
       - in: path
         name: id
@@ -143,7 +223,7 @@ paths:
           format: uuid
         required: true
       tags:
-      - shop
+      - v1
       security:
       - jwtAuth: []
       - {}
@@ -152,28 +232,48 @@ paths:
           description: No response body
   /v1/shop/orders/:
     get:
-      operationId: shop_orders_retrieve
+      operationId: v1_shop_orders_retrieve
       tags:
-      - shop
+      - v1
       security:
       - jwtAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
     post:
-      operationId: shop_orders_create
+      operationId: v1_shop_orders_create
       tags:
-      - shop
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Order'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Order'
+        required: true
       security:
       - jwtAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
   /v1/shop/orders/{id}/:
     get:
-      operationId: shop_orders_retrieve_2
+      operationId: v1_shop_orders_retrieve_2
       parameters:
       - in: path
         name: id
@@ -182,15 +282,19 @@ paths:
           format: uuid
         required: true
       tags:
-      - shop
+      - v1
       security:
       - jwtAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
     put:
-      operationId: shop_orders_update
+      operationId: v1_shop_orders_update
       parameters:
       - in: path
         name: id
@@ -199,15 +303,31 @@ paths:
           format: uuid
         required: true
       tags:
-      - shop
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Order'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Order'
+        required: true
       security:
       - jwtAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
     delete:
-      operationId: shop_orders_destroy
+      operationId: v1_shop_orders_destroy
       parameters:
       - in: path
         name: id
@@ -216,7 +336,7 @@ paths:
           format: uuid
         required: true
       tags:
-      - shop
+      - v1
       security:
       - jwtAuth: []
       - {}
@@ -225,28 +345,48 @@ paths:
           description: No response body
   /v1/shop/products/:
     get:
-      operationId: shop_products_retrieve
+      operationId: v1_shop_products_retrieve
       tags:
-      - shop
+      - v1
       security:
       - jwtAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+          description: ''
     post:
-      operationId: shop_products_create
+      operationId: v1_shop_products_create
       tags:
-      - shop
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Product'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
       security:
       - jwtAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+          description: ''
   /v1/shop/products/{id}/:
     get:
-      operationId: shop_products_retrieve_2
+      operationId: v1_shop_products_retrieve_2
       parameters:
       - in: path
         name: id
@@ -255,15 +395,19 @@ paths:
           format: uuid
         required: true
       tags:
-      - shop
+      - v1
       security:
       - jwtAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+          description: ''
     put:
-      operationId: shop_products_update
+      operationId: v1_shop_products_update
       parameters:
       - in: path
         name: id
@@ -272,15 +416,31 @@ paths:
           format: uuid
         required: true
       tags:
-      - shop
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Product'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
       security:
       - jwtAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+          description: ''
     delete:
-      operationId: shop_products_destroy
+      operationId: v1_shop_products_destroy
       parameters:
       - in: path
         name: id
@@ -289,7 +449,7 @@ paths:
           format: uuid
         required: true
       tags:
-      - shop
+      - v1
       security:
       - jwtAuth: []
       - {}
@@ -298,12 +458,12 @@ paths:
           description: No response body
   /v1/user/token/:
     post:
-      operationId: user_token_create
+      operationId: v1_user_token_create
       description: |-
         Takes a set of user credentials and returns an access and refresh JSON web
         token pair to prove the authentication of those credentials.
       tags:
-      - user
+      - v1
       requestBody:
         content:
           application/json:
@@ -325,12 +485,12 @@ paths:
           description: ''
   /v1/user/token/refresh/:
     post:
-      operationId: user_token_refresh_create
+      operationId: v1_user_token_refresh_create
       description: |-
         Takes a refresh type JSON web token and returns an access type JSON web
         token if the refresh token is valid.
       tags:
-      - user
+      - v1
       requestBody:
         content:
           application/json:
@@ -352,12 +512,12 @@ paths:
           description: ''
   /v1/user/token/verify/:
     post:
-      operationId: user_token_verify_create
+      operationId: v1_user_token_verify_create
       description: |-
         Takes a token and indicates if it is valid.  This view provides no
         information about a token's fitness for a particular use.
       tags:
-      - user
+      - v1
       requestBody:
         content:
           application/json:
@@ -379,9 +539,9 @@ paths:
           description: ''
   /v1/user/users/:
     get:
-      operationId: user_users_retrieve
+      operationId: v1_user_users_retrieve
       tags:
-      - user
+      - v1
       security:
       - jwtAuth: []
       - {}
@@ -389,9 +549,9 @@ paths:
         '200':
           description: No response body
     post:
-      operationId: user_users_create
+      operationId: v1_user_users_create
       tags:
-      - user
+      - v1
       security:
       - jwtAuth: []
       - {}
@@ -400,7 +560,7 @@ paths:
           description: No response body
   /v1/user/users/{id}/:
     get:
-      operationId: user_users_retrieve_2
+      operationId: v1_user_users_retrieve_2
       parameters:
       - in: path
         name: id
@@ -409,7 +569,7 @@ paths:
           format: uuid
         required: true
       tags:
-      - user
+      - v1
       security:
       - jwtAuth: []
       - {}
@@ -417,7 +577,7 @@ paths:
         '200':
           description: No response body
     put:
-      operationId: user_users_update
+      operationId: v1_user_users_update
       parameters:
       - in: path
         name: id
@@ -426,7 +586,7 @@ paths:
           format: uuid
         required: true
       tags:
-      - user
+      - v1
       security:
       - jwtAuth: []
       - {}
@@ -434,7 +594,7 @@ paths:
         '200':
           description: No response body
     delete:
-      operationId: user_users_destroy
+      operationId: v1_user_users_destroy
       parameters:
       - in: path
         name: id
@@ -443,7 +603,7 @@ paths:
           format: uuid
         required: true
       tags:
-      - user
+      - v1
       security:
       - jwtAuth: []
       - {}
@@ -452,9 +612,9 @@ paths:
           description: No response body
   /v1/user/users/me/:
     get:
-      operationId: user_users_me_retrieve
+      operationId: v1_user_users_me_retrieve
       tags:
-      - user
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -462,6 +622,41 @@ paths:
           description: No response body
 components:
   schemas:
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        slug:
+          type: string
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+        parent:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - id
+      - name
+      - slug
+    Customer:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        user:
+          type: string
+          format: uuid
+      required:
+      - id
+      - user
     MyTokenObtainPair:
       type: object
       properties:
@@ -474,6 +669,65 @@ components:
       required:
       - email
       - password
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        customer:
+          type: string
+          format: uuid
+        products:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required:
+      - created_at
+      - customer
+      - id
+      - products
+      - updated_at
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        description:
+          type: string
+        image:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+        category:
+          type: string
+          format: uuid
+      required:
+      - category
+      - description
+      - id
+      - name
+      - price
     TokenRefresh:
       type: object
       properties:
