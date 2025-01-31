@@ -3,7 +3,6 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import get_user_model
 
 from user.models import User
-from utils.serializers import CustomPaginationSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -51,7 +50,3 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         token["user_claims"] = {"id": str(user.id)}
         return token
-
-
-class UserPaginationSerializer(CustomPaginationSerializer):
-    results = serializers.ListSerializer(child=UserSerializer())

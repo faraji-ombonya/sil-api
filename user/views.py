@@ -7,10 +7,10 @@ from rest_framework.views import APIView
 from user.serializers import (
     CreateUserSerializer,
     UserSerializer,
-    UserPaginationSerializer,
 )
 from user.models import User
 from utils.pagination import StandardPagination
+from utils.helpers import get_paginated_response_schema
 
 
 class AuthenticatedAPIView(APIView):
@@ -22,7 +22,13 @@ class UserList(AuthenticatedAPIView):
     serializer_class = CreateUserSerializer
     pagination_class = StandardPagination
 
-    @extend_schema(responses={200: UserPaginationSerializer})
+    @extend_schema(
+        responses={
+            200: get_paginated_response_schema(
+                UserSerializer, "Paginated list of users"
+            )
+        }
+    )
     def get(self, request, format=None):
         paginator = self.pagination_class()
         users = paginator.paginate_queryset(User.objects.all(), request)
