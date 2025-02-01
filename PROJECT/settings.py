@@ -228,3 +228,11 @@ SPECTACULAR_SETTINGS = {
 # Africa's Talking
 AFRICAS_TALKING_USERNAME = os.getenv("AFRICAS_TALKING_USERNAME")
 AFRICAS_TALKING_API_KEY = os.getenv("AFRICAS_TALKING_API_KEY")
+
+# Email
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = True

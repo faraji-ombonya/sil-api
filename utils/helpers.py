@@ -1,3 +1,4 @@
+from django.core.mail import mail_admins
 from drf_spectacular.utils import OpenApiResponse, inline_serializer
 from rest_framework import serializers
 
@@ -43,3 +44,7 @@ def get_category_tree(category: Category) -> list[Category]:
         category = category.parent
     categories.reverse()
     return categories
+
+
+def send_email(subject: str, message: str):
+    mail_admins(subject, message)

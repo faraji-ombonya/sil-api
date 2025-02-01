@@ -3,14 +3,15 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from africas_talking.tasks import send_sms
-from shop.models import Product, Category, Order, Customer
-from shop.serializers import (
+from .models import Product, Category, Order, Customer
+from .serializers import (
     ProductSerializer,
     CategorySerializer,
     OrderSerializer,
     CustomerSerializer,
 )
+from .tasks import mail_admins
+from africas_talking.tasks import send_sms
 from user.views import AuthenticatedAPIView
 from utils.pagination import StandardPagination
 from utils.helpers import get_paginated_response_schema
@@ -146,6 +147,12 @@ class OrderList(AuthenticatedAPIView):
         send_sms.delay_on_commit(
             f"Your order {order.id} has been placed.",
             [order.customer.user.phone_number],
+        )
+
+        # Send email to the admin
+        mail_admins.delay_on_commit(
+            f"New order {order.id} has been placed.",
+            f"Order ID: {order.id} \n Order Total: {order.total}",
         )
         return Response(serializer.data, status=201)
 

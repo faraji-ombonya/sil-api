@@ -7,6 +7,9 @@ from . import services
 def send_sms(message: str, phone_numbers: list[str]) -> bool:
     """Send an SMS to a list of phone numbers asynchronously.
 
+    A wrapper around the `send_sms` function from the
+    `africas_talking.services` module.
+
     Args:
         message (str): The message to send.
         phone_numbers (list[str]): The list of phone numbers to send
