@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "user",
     "shop",
+    "africas_talking",
 ]
 
 MIDDLEWARE = [
@@ -212,7 +213,7 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
-
+# DRF Spectacular (Swagger)
 SPECTACULAR_SETTINGS = {
     "TITLE": "Shop API",
     "DESCRIPTION": "Shop API",
@@ -223,3 +224,7 @@ SPECTACULAR_SETTINGS = {
         "persistAuthorization": True,
     },
 }
+
+# Africa's Talking
+AFRICAS_TALKING_USERNAME = os.getenv("AFRICAS_TALKING_USERNAME")
+AFRICAS_TALKING_API_KEY = os.getenv("AFRICAS_TALKING_API_KEY")

@@ -38,4 +38,5 @@ urlpatterns = [
     ),
     path("v1/shop/", include("shop.urls")),
     path("v1/user/", include("user.urls")),
+    path("v1/africas-talking/", include("africas_talking.urls")),
 ]
