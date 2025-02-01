@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -8,7 +9,9 @@ from .serializers import (
     ProductSerializer,
     CategorySerializer,
     OrderSerializer,
+    CreateOrderSerializer,
     CustomerSerializer,
+    CreateCustomerSerializer,
 )
 from .tasks import mail_admin
 from africas_talking.tasks import send_sms
@@ -126,6 +129,9 @@ class CategoryDetail(AuthenticatedAPIView):
             ),
         }
     ),
+    post=extend_schema(
+        request=CreateOrderSerializer,
+    ),
 )
 class OrderList(AuthenticatedAPIView):
     serializer_class = OrderSerializer
@@ -139,22 +145,25 @@ class OrderList(AuthenticatedAPIView):
         return Response(response, status=200)
 
     def post(self, request, format=None):
-        serializer = self.serializer_class(data=request.data)
+        print("request.data::", request.data)
+        serializer = CreateOrderSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         order = serializer.save()
 
         # Send SMS to the customer
         send_sms.delay_on_commit(
             f"Your order {order.id} has been placed.",
-            [order.customer.user.phone_number],
+            [order.customer.phone_number],
         )
 
         # Send email to the admin
         mail_admin.delay_on_commit(
             f"New order {order.id} has been placed.",
-            f"Order ID: {order.id} \n Order Total: {order.total}",
+            f"Order ID: {order.id} \n Order Total: {order.total_price}",
         )
-        return Response(serializer.data, status=201)
+        return Response(
+            self.serializer_class(order).data, status=status.HTTP_201_CREATED
+        )
 
 
 @extend_schema(tags=["Order"])
@@ -188,6 +197,9 @@ class OrderDetail(AuthenticatedAPIView):
             ),
         }
     ),
+    post=extend_schema(
+        request=CreateCustomerSerializer,
+    ),
 )
 class CustomerList(AuthenticatedAPIView):
     serializer_class = CustomerSerializer
@@ -201,7 +213,7 @@ class CustomerList(AuthenticatedAPIView):
         return Response(response, status=200)
 
     def post(self, request, format=None):
-        serializer = self.serializer_class(data=request.data)
+        serializer = CreateCustomerSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=201)

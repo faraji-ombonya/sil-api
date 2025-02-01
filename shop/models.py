@@ -35,6 +35,7 @@ class Product(BaseModel):
 
 class Customer(BaseModel):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    phone_number = models.CharField(max_length=15)
 
 
 class Order(BaseModel):
@@ -47,4 +48,3 @@ class OrderItem(BaseModel):
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    
