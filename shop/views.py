@@ -3,6 +3,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from africas_talking.tasks import send_sms
 from shop.models import Product, Category, Order, Customer
 from shop.serializers import (
     ProductSerializer,
@@ -139,7 +140,13 @@ class OrderList(AuthenticatedAPIView):
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        order = serializer.save()
+
+        # Send SMS to the customer
+        send_sms.delay_on_commit(
+            f"Your order {order.id} has been placed.",
+            [order.customer.user.phone_number],
+        )
         return Response(serializer.data, status=201)
 
 
