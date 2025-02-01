@@ -49,37 +49,35 @@ class OrderSerializer(serializers.ModelSerializer):
         return representation
 
 
-class ProductOrderSerializer(serializers.Serializer):
-    product_id = serializers.UUIDField()
-    quantity = serializers.IntegerField()
+class OrderItemCreateSerializer(serializers.ModelSerializer):
 
-    def validate_product_id(self, value):
-        if not Product.objects.filter(id=value).exists():
-            raise serializers.ValidationError("Product does not exist")
-        return value
+    class Meta:
+        model = OrderItem
+        fields = ["product", "quantity"]
 
 
 class CreateOrderSerializer(serializers.ModelSerializer):
-    products = ProductOrderSerializer(many=True)
+    order_items = OrderItemCreateSerializer(many=True)
 
     class Meta:
         model = Order
         exclude = ["total_price"]
 
     def create(self, validated_data):
-        products = validated_data.pop("products")
+        order_items = validated_data.pop("order_items")
         order = Order.objects.create(**validated_data)
 
         # Create order items, and calculate total price. Creating order
         # items helps us freeze the price of the product at the time
         # of order
         total_price = 0
-        for product in products:
-            product_instance = Product.objects.get(id=product["product_id"])
+        for item in order_items:
+            product = item.get("product")
+            quantity = item.get("quantity")
             order_item = OrderItem.objects.create(
-                product=product_instance,
-                quantity=product["quantity"],
-                price=product_instance.price,
+                product=product,
+                quantity=quantity,
+                price=product.price,
                 order=order,
             )
             total_price += order_item.price * order_item.quantity
