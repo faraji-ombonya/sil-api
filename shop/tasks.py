@@ -6,8 +6,8 @@ from celery import shared_task
 
 
 @shared_task
-def mail_admins(subject: str, message: str) -> bool:
-    """Send an email to all admins.
+def mail_admin(subject: str, message: str) -> bool:
+    """Send an email to the admin.
 
     Args:
         subject (str): The subject of the email.
@@ -16,7 +16,8 @@ def mail_admins(subject: str, message: str) -> bool:
     Returns:
         bool: Whether the email was sent successfully.
     """
-    admins = get_user_model().objects.filter(is_admin=True)
-    emails = [admin.email for admin in admins]
-    send_mail(subject, message, settings.EMAIL_HOST_USER, emails)
+    admin = get_user_model().objects.filter(is_admin=True).first()
+    if not admin:
+        return False
+    send_mail(subject, message, settings.EMAIL_HOST_USER, [admin.email])
     return True

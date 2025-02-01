@@ -10,7 +10,7 @@ from .serializers import (
     OrderSerializer,
     CustomerSerializer,
 )
-from .tasks import mail_admins
+from .tasks import mail_admin
 from africas_talking.tasks import send_sms
 from user.views import AuthenticatedAPIView
 from utils.pagination import StandardPagination
@@ -150,7 +150,7 @@ class OrderList(AuthenticatedAPIView):
         )
 
         # Send email to the admin
-        mail_admins.delay_on_commit(
+        mail_admin.delay_on_commit(
             f"New order {order.id} has been placed.",
             f"Order ID: {order.id} \n Order Total: {order.total}",
         )
