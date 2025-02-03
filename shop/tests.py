@@ -2,92 +2,11 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
-from .models import Category, Product, Customer
+from unittest.mock import patch
 
-# class CategorySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Category
-#         fields = "__all__"
-
-
-# @extend_schema(tags=["Category"])
-# @extend_schema_view(
-#     get=extend_schema(
-#         responses={
-#             200: get_paginated_response_schema(
-#                 CategorySerializer, "Paginated list of categories"
-#             ),
-#         }
-#     ),
-# )
-# class CategoryList(APIView):
-#     serializer_class = CategorySerializer
-#     pagination_class = StandardPagination
-
-#     def get(self, request, format=None):
-#         paginator = self.pagination_class()
-#         categories = paginator.paginate_queryset(Category.objects.all(), request)
-#         serializer = self.serializer_class(categories, many=True)
-#         response = paginator.get_paginated_response(serializer.data)
-#         return Response(response, status=200)
-
-#     def post(self, request, format=None):
-#         serializer = self.serializer_class(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-#         return Response(serializer.data, status=201)
-
-
-# @extend_schema(tags=["Category"])
-# class CategoryDetail(AuthenticatedAPIView):
-#     serializer_class = CategorySerializer
-
-#     def get(self, request, pk, format=None):
-#         category = get_object_or_404(Category, pk=pk)
-#         serializer = self.serializer_class(category)
-#         return Response(serializer.data, status=200)
-
-#     def put(self, request, pk, format=None):
-#         category = get_object_or_404(Category, pk=pk)
-#         serializer = self.serializer_class(category, data=request.data, partial=True)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-#         return Response(serializer.data, status=200)
-
-#     def delete(self, request, pk, format=None):
-#         category = get_object_or_404(Category, pk=pk)
-#         category.delete()
-#         return Response(status=204)
-
-# class Category(BaseModel):
-#     name = models.CharField(max_length=255)
-#     slug = models.SlugField(unique=True)
-#     parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
-
-#     # slugify the name
-#     def save(self, *args, **kwargs):
-#         self.slug = slugify(self.name)
-#         super().save(*args, **kwargs)
-
-# from django.urls import path
-
-# from shop import views
-
-
-# urlpatterns = [
-#     path("products/", views.ProductList.as_view(), name="product_list"),
-#     path("products/<uuid:pk>/", views.ProductDetail.as_view(), name="product_detail"),
-#     path("categories/", views.CategoryList.as_view(), name="category_list"),
-#     path(
-#         "categories/<uuid:pk>/", views.CategoryDetail.as_view(), name="category_detail"
-#     ),
-#     path("orders/", views.OrderList.as_view(), name="order_list"),
-#     path("orders/<uuid:pk>/", views.OrderDetail.as_view(), name="order_detail"),
-#     path("customers/", views.CustomerList.as_view(), name="customer_list"),
-#     path(
-#         "customers/<uuid:pk>/", views.CustomerDetail.as_view(), name="customer_detail"
-#     ),
-# ]
+from .models import Category, Product, Customer, Order
+from .tasks import mail_admin
+from africas_talking.models import AfricasTalkingSMS
 
 
 class CategoryTestCase(APITestCase):
@@ -141,14 +60,6 @@ class CategoryTestCase(APITestCase):
         endpoint = self.detail_endpoint(self.category_g.id)
         response = self.client.delete(endpoint, format="json")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
-
-# class Product(BaseModel):
-#     name = models.CharField(max_length=255)
-#     price = models.DecimalField(max_digits=10, decimal_places=2)
-#     description = models.TextField()
-#     image = models.URLField(null=True, blank=True)
-#     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 
 class ProductTestCase(APITestCase):
@@ -280,6 +191,16 @@ class OrderTestCase(APITestCase):
             user=test_user, phone_number="1234567890"
         )
 
+        # User without phone number
+        user_without_phone_number = User.objects.create_user(
+            email="testuserx@test.com", password="testpasswordx"
+        )
+
+        # Customer without phone number
+        self.customer_without_phone_number = Customer.objects.create(
+            user=user_without_phone_number, phone_number=None
+        )
+
         self.category_x = Category.objects.create(
             name="Category x",
         )
@@ -292,7 +213,9 @@ class OrderTestCase(APITestCase):
             image="https://via.placeholder.com/150",
         )
 
-    def test_create_order(self):
+    @patch("shop.views.mail_admin.delay_on_commit")
+    @patch("africas_talking.tasks.send_sms.delay_on_commit")
+    def test_create_order(self, mock_send_sms, mock_mail_admin):
         data = {
             "customer": self.customer_x.id,
             "order_items": [{"product": self.product_x.id, "quantity": 4}],
@@ -304,6 +227,54 @@ class OrderTestCase(APITestCase):
             response.data["order_items"][0]["product"]["id"], str(self.product_x.id)
         )
         self.assertEqual(response.data["order_items"][0]["quantity"], 4)
+
+        # Verify that the order was created
+        order = Order.objects.first()
+        self.assertIsNotNone(order)
+        self.assertEqual(order.customer.id, self.customer_x.id)
+
+        # Verify that the SMS task was called with the correct arguments
+        mock_send_sms.assert_called_once_with(
+            "Your order has been placed.",
+            [self.customer_x.phone_number],
+        )
+
+        # Verify that the email task was called with the correct arguments
+        mock_mail_admin.assert_called_once_with(
+            "New Order Placed.",
+            f"Order ID: {order.id} \n Total Price: {order.total_price}",
+        )
+
+    @patch("shop.views.mail_admin.delay_on_commit")
+    @patch("africas_talking.tasks.send_sms.delay_on_commit")
+    def test_create_order_without_phone_number(self, mock_send_sms, mock_mail_admin):
+        data = {
+            "customer": self.customer_without_phone_number.id,
+            "order_items": [{"product": self.product_x.id, "quantity": 4}],
+        }
+        response = self.client.post(self.list_endpoint, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(
+            response.data["customer"], self.customer_without_phone_number.id
+        )
+        self.assertEqual(
+            response.data["order_items"][0]["product"]["id"], str(self.product_x.id)
+        )
+        self.assertEqual(response.data["order_items"][0]["quantity"], 4)
+
+        # Verify that the order was created
+        order = Order.objects.first()
+        self.assertIsNotNone(order)
+        self.assertEqual(order.customer.id, self.customer_without_phone_number.id)
+
+        # Verify that the email task was called with the correct arguments
+        mock_mail_admin.assert_called_once_with(
+            "New Order Placed.",
+            f"Order ID: {order.id} \n Total Price: {order.total_price}",
+        )
+
+        # Verify that the SMS task was not called
+        mock_send_sms.assert_not_called()
 
     def test_get_orders(self):
         data = {
@@ -333,3 +304,17 @@ class OrderTestCase(APITestCase):
         order_id = response.data["id"]
         response = self.client.delete(self.detail_endpoint(order_id), format="json")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+
+class MailAdminTestCase(APITestCase):
+    def test_mail_admin(self):
+        # Without an admin
+        result = mail_admin("Subject here", "Here is the message.")
+        self.assertEqual(result, False)
+
+        # With an admin
+        get_user_model().objects.create_user(
+            email="admin@test.com", password="password", is_admin=True
+        )
+        result = mail_admin("Subject here", "Here is the message.")
+        self.assertEqual(result, True)
