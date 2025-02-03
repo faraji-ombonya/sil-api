@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from .models import Product, Category, Order, Customer
 from .serializers import (
     ProductSerializer,
+    CreateProductSerializer,
     CategorySerializer,
     OrderSerializer,
     CreateOrderSerializer,
@@ -47,7 +48,7 @@ class ProductList(AuthenticatedAPIView):
         return Response(response, status=200)
 
     def post(self, request, format=None):
-        serializer = self.serializer_class(data=request.data)
+        serializer = CreateProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=201)

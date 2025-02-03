@@ -16,13 +16,16 @@ class BaseModel(models.Model):
 
 class Category(BaseModel):
     name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, null=True, blank=True)
     parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
 
     # slugify the name
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    class Meta:
+        ordering = ["-created_at"]
 
 
 class Product(BaseModel):
@@ -32,15 +35,24 @@ class Product(BaseModel):
     image = models.URLField(null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
+    class Meta:
+        ordering = ["-created_at"]
+
 
 class Customer(BaseModel):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=15, null=True, blank=True)
 
+    class Meta:
+        ordering = ["-created_at"]
+
 
 class Order(BaseModel):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    class Meta:
+        ordering = ["-created_at"]
 
 
 class OrderItem(BaseModel):
@@ -48,3 +60,6 @@ class OrderItem(BaseModel):
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ["-created_at"]
