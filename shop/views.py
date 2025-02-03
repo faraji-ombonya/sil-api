@@ -1,3 +1,5 @@
+import logging
+
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status
@@ -18,6 +20,9 @@ from africas_talking.tasks import send_sms
 from user.views import AuthenticatedAPIView
 from utils.pagination import StandardPagination
 from utils.helpers import get_paginated_response_schema
+
+
+logger = logging.getLogger(__name__)
 
 
 @extend_schema(tags=["Product"])
@@ -145,21 +150,23 @@ class OrderList(AuthenticatedAPIView):
         return Response(response, status=200)
 
     def post(self, request, format=None):
-        print("request.data::", request.data)
         serializer = CreateOrderSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         order = serializer.save()
 
-        # Send SMS to the customer
-        send_sms.delay_on_commit(
-            f"Your order {order.id} has been placed.",
-            [order.customer.phone_number],
-        )
+        # Send an SMS to the customer
+        if order.customer.phone_number:
+            send_sms.delay_on_commit(
+                f"Your order has been placed.",
+                [order.customer.phone_number],
+            )
+        else:
+            logger.warning(f"No phone number for customer {order.customer.id}")
 
-        # Send email to the admin
+        # Send an email to the admin
         mail_admin.delay_on_commit(
-            f"New order {order.id} has been placed.",
-            f"Order ID: {order.id} \n Order Total: {order.total_price}",
+            f"New Order Placed.",
+            f"Order ID: {order.id} \n Total Price: {order.total_price}",
         )
         return Response(
             self.serializer_class(order).data, status=status.HTTP_201_CREATED

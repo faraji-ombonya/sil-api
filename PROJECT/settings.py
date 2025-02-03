@@ -149,15 +149,9 @@ LOGGING = {
     "disable_existing_loggers": False,
     "handlers": {
         "console": {"class": "logging.StreamHandler"},
-        # "file": {
-        #     "class": "logging.FileHandler",
-        #     "filename": "general.log",
-        #     "formatter": "verbose",
-        # },
     },
     "loggers": {
         "": {
-            # "handlers": ["console", "file"],
             "handlers": ["console"],
             "level": os.environ.get("DJANGO_LOG_LEVEL", "INFO"),
         }
@@ -246,8 +240,8 @@ GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],  # Global templates directory
-        "APP_DIRS": True,  # Enables searching inside apps' templates/
+        "DIRS": [BASE_DIR / "templates"],
+        "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
@@ -258,12 +252,3 @@ TEMPLATES = [
         },
     },
 ]
-
-
-# Session
-SESSION_ENGINE = "django.contrib.sessions.backends.db"  
-SESSION_COOKIE_SECURE = False
-SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_AGE = 1209600
-SESSION_SAVE_EVERY_REQUEST = True
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False

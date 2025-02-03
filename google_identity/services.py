@@ -33,7 +33,7 @@ class DiscoveryDocument:
         return self.discovery_document[key]
 
 
-def get_signin_url(state: str) -> str:
+def get_signin_url(state: str, nonce: str) -> str:
     """Get the signin URL for the Google OAuth2.0 server.
 
     Args:
@@ -48,6 +48,7 @@ def get_signin_url(state: str) -> str:
         "scope": "openid email profile",
         "redirect_uri": REDIRECT_URI,
         "state": state,
+        "nonce": nonce,
     }
     authorization_endpoint = DiscoveryDocument().get("authorization_endpoint")
     url = f"{authorization_endpoint}?{urlencode(url_params)}"

@@ -28,6 +28,7 @@ class TokenResponse(TypedDict):
     token_type: str
     refresh_token: str
 
+
 class IDTokenPayload(TypedDict):
     iss: str
     azp: str

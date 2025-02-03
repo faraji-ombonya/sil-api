@@ -35,7 +35,7 @@ class Product(BaseModel):
 
 class Customer(BaseModel):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
-    phone_number = models.CharField(max_length=15)
+    phone_number = models.CharField(max_length=15, null=True, blank=True)
 
 
 class Order(BaseModel):
