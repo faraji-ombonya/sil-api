@@ -6,7 +6,6 @@ from unittest.mock import patch
 
 from .models import Category, Product, Customer, Order
 from .tasks import mail_admin
-from africas_talking.models import AfricasTalkingSMS
 
 
 class CategoryTestCase(APITestCase):

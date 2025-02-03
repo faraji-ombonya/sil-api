@@ -6,4 +6,7 @@ omit =
     */settings.py
     */__init__.py
     */admin.py
+    */apps.py
+    */manage.py
+    */celery.py
     
