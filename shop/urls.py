@@ -10,6 +10,11 @@ urlpatterns = [
     path(
         "categories/<uuid:pk>/", views.CategoryDetail.as_view(), name="category_detail"
     ),
+    path(
+        "categories/<uuid:pk>/average-price/",
+        views.AverageProductPrice.as_view(),
+        name="average_product_price",
+    ),
     path("orders/", views.OrderList.as_view(), name="order_list"),
     path("orders/<uuid:pk>/", views.OrderDetail.as_view(), name="order_detail"),
     path("customers/", views.CustomerList.as_view(), name="customer_list"),

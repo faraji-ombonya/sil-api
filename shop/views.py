@@ -1,5 +1,6 @@
 import logging
 
+from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status
@@ -11,12 +12,14 @@ from .serializers import (
     ProductSerializer,
     CreateProductSerializer,
     CategorySerializer,
+    CreateCategorySerializer,
     OrderSerializer,
     CreateOrderSerializer,
     CustomerSerializer,
     CreateCustomerSerializer,
 )
 from .tasks import mail_admin
+from .utils import get_descendant_categories
 from africas_talking.tasks import send_sms
 from user.views import AuthenticatedAPIView
 from utils.pagination import StandardPagination
@@ -34,6 +37,9 @@ logger = logging.getLogger(__name__)
                 ProductSerializer, "Paginated list of products"
             ),
         }
+    ),
+    post=extend_schema(
+        request=CreateProductSerializer,
     ),
 )
 class ProductList(AuthenticatedAPIView):
@@ -85,8 +91,11 @@ class ProductDetail(AuthenticatedAPIView):
             ),
         }
     ),
+    post=extend_schema(
+        request=CreateCategorySerializer,
+    ),
 )
-class CategoryList(APIView):
+class CategoryList(AuthenticatedAPIView):
     serializer_class = CategorySerializer
     pagination_class = StandardPagination
 
@@ -98,7 +107,7 @@ class CategoryList(APIView):
         return Response(response, status=200)
 
     def post(self, request, format=None):
-        serializer = self.serializer_class(data=request.data)
+        serializer = CreateCategorySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=201)
@@ -247,3 +256,24 @@ class CustomerDetail(AuthenticatedAPIView):
         customer = get_object_or_404(Customer, pk=pk)
         customer.delete()
         return Response(status=204)
+
+
+@extend_schema(tags=["Category"])
+class AverageProductPrice(APIView):
+    def get(self, request, pk, format=None):
+        """Return the average product price for a given category and its child categories."""
+
+        # Get the main category
+        category = get_object_or_404(Category, pk=pk)
+
+        # Get all descendant categories (including the main category)
+        all_categories = [category] + get_descendant_categories(category)
+
+        # Get all products in the category and its descendants
+        products = Product.objects.filter(category__in=all_categories)
+
+        # Calculate the average price
+        average_price = products.aggregate(Avg("price"))["price__avg"]
+
+        # Return the response
+        return Response({"average_price": average_price}, status=200)

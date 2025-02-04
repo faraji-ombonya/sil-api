@@ -11,6 +11,12 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class CreateCategorySerializer(CategorySerializer):
+    class Meta(CategorySerializer.Meta):
+        exclude = ["slug"]
+        fields = None
+
+
 class CreateProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
