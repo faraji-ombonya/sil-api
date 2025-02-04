@@ -68,6 +68,7 @@ class ServerFlowCallback(APIView):
         try:
             # Check if the user exists in the database
             User = get_user_model()
+            print("id_token_payload::::::", id_token_payload)
             user = User.objects.get(sub=id_token_payload.get("sub"))
         except User.DoesNotExist:
             # Create a user if they don't exist
@@ -79,8 +80,8 @@ class ServerFlowCallback(APIView):
                 image=id_token_payload.get("picture"),
             )
 
-        # Create a customer profile for the user
-        Customer.objects.create(user=user)
+            # Create a customer profile for the user
+            Customer.objects.create(user=user)
 
         # Generate a token for the user
         refresh = RefreshToken.for_user(user)
