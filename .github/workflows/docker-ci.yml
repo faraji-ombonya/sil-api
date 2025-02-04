@@ -10,7 +10,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      CI: True
+      CI: "True"
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
