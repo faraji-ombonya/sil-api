@@ -10,3 +10,5 @@ omit =
     */manage.py
     */celery.py
     
+[report]
+fail_under = 90
