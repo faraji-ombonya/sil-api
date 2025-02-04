@@ -1,6 +1,15 @@
 name: sil
 
 services:
+  api:
+    build:
+      context: .
+      target: builder
+    ports:
+      - "8000:8000"
+    networks:
+      - juno
+
   rabbit:
     image: rabbitmq
     expose:
@@ -23,7 +32,7 @@ services:
     ports:
       - 5432:5432
     healthcheck:
-      test: [ "CMD", "pg_isready" ]
+      test: ["CMD", "pg_isready"]
       interval: 10s
       timeout: 5s
       retries: 5
