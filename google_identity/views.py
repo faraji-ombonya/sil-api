@@ -68,7 +68,6 @@ class ServerFlowCallback(APIView):
         try:
             # Check if the user exists in the database
             User = get_user_model()
-            print("id_token_payload::::::", id_token_payload)
             user = User.objects.get(sub=id_token_payload.get("sub"))
         except User.DoesNotExist:
             # Create a user if they don't exist
