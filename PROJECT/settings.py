@@ -34,7 +34,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
 
 # Application definition
@@ -106,6 +106,10 @@ DATABASES = {
     },
 }
 
+# Use sqlite in CI
+if os.getenv("CI") == "True":
+    DATABASES["default"]["ENGINE"] = "django.db.backends.sqlite3"
+    DATABASES["default"]["NAME"] = BASE_DIR / "db.sqlite3"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -260,4 +264,3 @@ TEMPLATES = [
         },
     },
 ]
-
