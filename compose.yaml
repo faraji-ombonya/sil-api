@@ -1,17 +1,17 @@
 name: sil
 
 services:
-  api:
-    # build:
-    #   context: .
-    #   target: builder
-    image: faraji88/shop-api:master
-    ports:
-      - "8000:8000"
-    networks:
-      - juno
-    env_file:
-      - .env
+  # api:
+  #   # build:
+  #   #   context: .
+  #   #   target: builder
+  #   image: faraji88/shop-api:master
+  #   ports:
+  #     - "8000:8000"
+  #   networks:
+  #     - juno
+  #   env_file:
+  #     - .env
 
   rabbit:
     image: rabbitmq
