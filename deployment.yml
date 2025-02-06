@@ -17,6 +17,7 @@ spec:
       containers:
         - name: shop-api
           image: faraji88/shop-api:master
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
           envFrom:
