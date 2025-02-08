@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from user.serializers import CreateUserSerializer, UserSerializer
 from user.models import User
 from utils.pagination import StandardPagination
-from utils.helpers import get_paginated_response_schema
+from utils.open_api import get_paginated_response_schema
 
 
 class AuthenticatedAPIView(APIView):
