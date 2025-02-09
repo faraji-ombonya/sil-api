@@ -81,7 +81,7 @@ jobs:
           key: ${{ secrets.CD_SSH_PRIVATE_KEY }}
           script: |
             cd ~/shop-api/
-            
+
             echo "Recreating secrets..."
             kubectl create secret generic shop-api-secret --from-env-file=.env --dry-run=client -o yaml > secret.yml
 
@@ -90,5 +90,8 @@ jobs:
 
             echo "Applying deployment..."
             kubectl apply -f deployment.yml
+
+            echo "Restarting deployment..."
+            kubectl rollout restart deployment shop-api
 
             echo "Deployment completed!"
