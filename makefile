@@ -7,3 +7,4 @@ deploy:
 	kubectl apply -f deployment.yml
 	kubectl set image deployment/shop-api shop-api=faraji88/shop-api:master
 	kubectl rollout restart deployment shop-api
+	kubectl rollout restart deployment celery-worker
