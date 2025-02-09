@@ -23,7 +23,7 @@ from .utils import get_descendant_categories
 from africas_talking.tasks import send_sms
 from user.views import AuthenticatedAPIView
 from utils.pagination import StandardPagination
-from utils.helpers import get_paginated_response_schema
+from utils.open_api import page, per_page, get_paginated_response_schema
 
 
 logger = logging.getLogger(__name__)
@@ -32,11 +32,12 @@ logger = logging.getLogger(__name__)
 @extend_schema(tags=["Product"])
 @extend_schema_view(
     get=extend_schema(
+        parameters=[page, per_page],
         responses={
             200: get_paginated_response_schema(
                 ProductSerializer, "Paginated list of products"
             ),
-        }
+        },
     ),
     post=extend_schema(
         request=CreateProductSerializer,
@@ -47,6 +48,7 @@ class ProductList(AuthenticatedAPIView):
     pagination_class = StandardPagination
 
     def get(self, request, format=None):
+        """Get a paginated list of products."""
         paginator = self.pagination_class()
         products = paginator.paginate_queryset(Product.objects.all(), request)
         serializer = self.serializer_class(products, many=True)
@@ -54,6 +56,7 @@ class ProductList(AuthenticatedAPIView):
         return Response(response, status=200)
 
     def post(self, request, format=None):
+        """Create a new product."""
         serializer = CreateProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -65,11 +68,13 @@ class ProductDetail(AuthenticatedAPIView):
     serializer_class = ProductSerializer
 
     def get(self, request, pk, format=None):
+        """Get a product by its ID."""
         product = get_object_or_404(Product, pk=pk)
         serializer = self.serializer_class(product)
         return Response(serializer.data, status=200)
 
     def put(self, request, pk, format=None):
+        """Update a product by its ID."""
         product = get_object_or_404(Product, pk=pk)
         serializer = self.serializer_class(product, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -77,6 +82,7 @@ class ProductDetail(AuthenticatedAPIView):
         return Response(serializer.data, status=200)
 
     def delete(self, request, pk, format=None):
+        """Delete a product by its ID."""
         product = get_object_or_404(Product, pk=pk)
         product.delete()
         return Response(status=204)
@@ -85,6 +91,7 @@ class ProductDetail(AuthenticatedAPIView):
 @extend_schema(tags=["Category"])
 @extend_schema_view(
     get=extend_schema(
+        parameters=[page, per_page],
         responses={
             200: get_paginated_response_schema(
                 CategorySerializer, "Paginated list of categories"
@@ -100,6 +107,7 @@ class CategoryList(AuthenticatedAPIView):
     pagination_class = StandardPagination
 
     def get(self, request, format=None):
+        """Get a paginated list of categories."""
         paginator = self.pagination_class()
         categories = paginator.paginate_queryset(Category.objects.all(), request)
         serializer = self.serializer_class(categories, many=True)
@@ -107,6 +115,7 @@ class CategoryList(AuthenticatedAPIView):
         return Response(response, status=200)
 
     def post(self, request, format=None):
+        """Create a new category."""
         serializer = CreateCategorySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -118,11 +127,13 @@ class CategoryDetail(AuthenticatedAPIView):
     serializer_class = CategorySerializer
 
     def get(self, request, pk, format=None):
+        """Get a category by its ID."""
         category = get_object_or_404(Category, pk=pk)
         serializer = self.serializer_class(category)
         return Response(serializer.data, status=200)
 
     def put(self, request, pk, format=None):
+        """Update a category by its ID."""
         category = get_object_or_404(Category, pk=pk)
         serializer = self.serializer_class(category, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -130,6 +141,7 @@ class CategoryDetail(AuthenticatedAPIView):
         return Response(serializer.data, status=200)
 
     def delete(self, request, pk, format=None):
+        """Delete a category by its ID."""
         category = get_object_or_404(Category, pk=pk)
         category.delete()
         return Response(status=204)
@@ -138,6 +150,7 @@ class CategoryDetail(AuthenticatedAPIView):
 @extend_schema(tags=["Order"])
 @extend_schema_view(
     get=extend_schema(
+        parameters=[page, per_page],
         responses={
             200: get_paginated_response_schema(
                 OrderSerializer, "Paginated list of orders"
@@ -153,6 +166,7 @@ class OrderList(AuthenticatedAPIView):
     pagination_class = StandardPagination
 
     def get(self, request, format=None):
+        """Get a paginated list of orders."""
         paginator = self.pagination_class()
         orders = paginator.paginate_queryset(Order.objects.all(), request)
         serializer = self.serializer_class(orders, many=True)
@@ -160,6 +174,7 @@ class OrderList(AuthenticatedAPIView):
         return Response(response, status=200)
 
     def post(self, request, format=None):
+        """Create a new order."""
         serializer = CreateOrderSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         order = serializer.save()
@@ -188,11 +203,13 @@ class OrderDetail(AuthenticatedAPIView):
     serializer_class = OrderSerializer
 
     def get(self, request, pk, format=None):
+        """Get an order by its ID."""
         order = get_object_or_404(Order, pk=pk)
         serializer = self.serializer_class(order)
         return Response(serializer.data, status=200)
 
     def put(self, request, pk, format=None):
+        """Update an order by its ID."""
         order = get_object_or_404(Order, pk=pk)
         serializer = self.serializer_class(order, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -200,6 +217,7 @@ class OrderDetail(AuthenticatedAPIView):
         return Response(serializer.data, status=200)
 
     def delete(self, request, pk, format=None):
+        """Delete an order by its ID."""
         order = get_object_or_404(Order, pk=pk)
         order.delete()
         return Response(status=204)
@@ -208,6 +226,7 @@ class OrderDetail(AuthenticatedAPIView):
 @extend_schema(tags=["Customer"])
 @extend_schema_view(
     get=extend_schema(
+        parameters=[page, per_page],
         responses={
             200: get_paginated_response_schema(
                 CustomerSerializer, "Paginated list of customers"
@@ -223,6 +242,7 @@ class CustomerList(AuthenticatedAPIView):
     pagination_class = StandardPagination
 
     def get(self, request, format=None):
+        """Get a paginated list of customers."""
         paginator = self.pagination_class()
         customers = paginator.paginate_queryset(Customer.objects.all(), request)
         serializer = self.serializer_class(customers, many=True)
@@ -230,6 +250,7 @@ class CustomerList(AuthenticatedAPIView):
         return Response(response, status=200)
 
     def post(self, request, format=None):
+        """Create a new customer."""
         serializer = CreateCustomerSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -241,11 +262,13 @@ class CustomerDetail(AuthenticatedAPIView):
     serializer_class = CustomerSerializer
 
     def get(self, request, pk, format=None):
+        """Get a customer by their ID."""
         customer = get_object_or_404(Customer, pk=pk)
         serializer = self.serializer_class(customer)
         return Response(serializer.data, status=200)
 
     def put(self, request, pk, format=None):
+        """Update a customer by their ID."""
         customer = get_object_or_404(Customer, pk=pk)
         serializer = self.serializer_class(customer, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -253,6 +276,7 @@ class CustomerDetail(AuthenticatedAPIView):
         return Response(serializer.data, status=200)
 
     def delete(self, request, pk, format=None):
+        """Delete a customer by their ID."""
         customer = get_object_or_404(Customer, pk=pk)
         customer.delete()
         return Response(status=204)
@@ -261,8 +285,10 @@ class CustomerDetail(AuthenticatedAPIView):
 @extend_schema(tags=["Category"])
 class AverageProductPrice(APIView):
     def get(self, request, pk, format=None):
-        """Return the average product price for a given category and its child categories."""
-
+        """
+        Return the average product price for a given category and its
+        child categories.
+        """
         # Get the main category
         category = get_object_or_404(Category, pk=pk)
 
