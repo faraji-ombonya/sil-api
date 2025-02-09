@@ -80,6 +80,8 @@ jobs:
           username: ${{ secrets.CD_SERVER_USER }}
           key: ${{ secrets.CD_SSH_PRIVATE_KEY }}
           script: |
+            cd ~/shop-api/
+            
             echo "Recreating secrets..."
             kubectl create secret generic shop-api-secret --from-env-file=.env --dry-run=client -o yaml > secret.yml
 
