@@ -10,7 +10,7 @@ from .types import DiscoveryDocumentKeys, TokenResponse, IDTokenPayload
 
 
 DISCOVERY_DOCUMENT_URL = "https://accounts.google.com/.well-known/openid-configuration"
-REDIRECT_URI = "http://localhost:8000/v1/google-identity/signin-callback/"
+REDIRECT_URI = f"{settings.HOST}/v1/google-identity/signin-callback/"
 
 
 class DiscoveryDocument:

@@ -36,6 +36,7 @@ DEBUG = os.getenv("DEBUG") == "True"
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
+HOST = os.getenv("HOST", "http://localhost:8000")
 
 # Application definition
 
