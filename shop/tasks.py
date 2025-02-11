@@ -11,12 +11,16 @@ logger = logging.getLogger(__name__)
 
 
 @shared_task
-def mail_admin(subject: str, message: str) -> bool:
+def mail_admin(
+    subject: str,  body: str = None, html_message: str = None
+) -> bool:
     """Send an email to the admin.
 
     Args:
         subject (str): The subject of the email.
         message (str): The message of the email.
+        body (str): The body of the email.
+        html_message (str): The html message of the email.
 
     Returns:
         bool: Whether the email was sent successfully.
@@ -25,5 +29,11 @@ def mail_admin(subject: str, message: str) -> bool:
     if not admin:
         logger.warning("No admin found")
         return False
-    send_mail(subject, message, settings.EMAIL_HOST_USER, [admin.email])
+    send_mail(
+        subject,
+        body,
+        settings.EMAIL_HOST_USER,
+        [admin.email],
+        html_message=html_message,
+    )
     return True
