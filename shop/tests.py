@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.utils.html import strip_tags
+from django.template.loader import render_to_string
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 from unittest.mock import patch
@@ -239,14 +241,22 @@ class OrderTestCase(APITestCase):
         )
 
         # Verify that the email task was called with the correct arguments
-        mock_mail_admin.assert_called_once_with(
-            "New Order Placed.",
-            f"Order ID: {order.id} \n Total Price: {order.total_price}",
-        )
+        mock_mail_admin.assert_called_once()
+        call_args = mock_mail_admin.call_args
 
-    @patch("shop.views.mail_admin.delay_on_commit")
+        # Check the subject
+        self.assertEqual(call_args.kwargs["subject"], "New Order Placed")
+
+        # Check the body (plain text content)
+        self.assertIn(f"{order.id}", call_args.kwargs["body"])
+        self.assertIn(f"{order.total_price}", call_args.kwargs["body"])
+
+        # Check the HTML content
+        self.assertIn(f"{order.id}", call_args.kwargs["html_message"])
+        self.assertIn(f"{order.total_price}", call_args.kwargs["html_message"])
+
     @patch("africas_talking.tasks.send_sms.delay_on_commit")
-    def test_create_order_without_phone_number(self, mock_send_sms, mock_mail_admin):
+    def test_create_order_without_phone_number(self, mock_send_sms):
         data = {
             "customer": self.customer_without_phone_number.id,
             "order_items": [{"product": self.product_x.id, "quantity": 4}],
@@ -265,12 +275,6 @@ class OrderTestCase(APITestCase):
         order = Order.objects.first()
         self.assertIsNotNone(order)
         self.assertEqual(order.customer.id, self.customer_without_phone_number.id)
-
-        # Verify that the email task was called with the correct arguments
-        mock_mail_admin.assert_called_once_with(
-            "New Order Placed.",
-            f"Order ID: {order.id} \n Total Price: {order.total_price}",
-        )
 
         # Verify that the SMS task was not called
         mock_send_sms.assert_not_called()

@@ -1,11 +1,9 @@
 import logging
 
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status
 from rest_framework.views import APIView
@@ -206,7 +204,7 @@ class OrderList(AuthenticatedAPIView):
 
         # Render HTML template for the email
         html_content = render_to_string(
-            "email/order_confirmation.html",  # Path to your HTML template
+            "email/order_confirmation.html",
             {
                 "order_id": order.id,
                 "items": items,
@@ -218,9 +216,6 @@ class OrderList(AuthenticatedAPIView):
 
         # Fallback text content for non-HTML email clients
         text_content = strip_tags(html_content)
-
-        print("text_content", text_content)
-        print("html_content", html_content)
 
         # Send the email
         mail_admin.delay_on_commit(
