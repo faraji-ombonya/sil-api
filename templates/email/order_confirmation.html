@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .order-details { margin-bottom: 20px; }
+        .order-details h2 { color: #333; }
+        .order-details p { margin: 5px 0; }
+        .items-table { width: 100%; border-collapse: collapse; }
+        .items-table th, .items-table td { border: 1px solid #ddd; padding: 8px; }
+        .items-table th { background-color: #f4f4f4; text-align: left; }
+        .total-price { font-weight: bold; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="order-details">
+        <h2>New Order Placed</h2>
+        <p><strong>Order ID:</strong> {{ order_id }}</p>
+        <p><strong>Customer Name:</strong> {{ customer_name }}</p>
+        <p><strong>Phone Number:</strong> {{ customer_phone }}</p>
+    </div>
+
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price (KES)</th>
+                <th>Total (KES)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.price }}</td>
+                <td>{{ item.total }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="total-price">
+        <p><strong>Total Price:</strong> KES {{ total_price }}</p>
+    </div>
+</body>
+</html>

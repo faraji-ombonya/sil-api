@@ -1,5 +1,9 @@
 import logging
 
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema, extend_schema_view
@@ -96,7 +100,7 @@ class ProductDetail(AuthenticatedAPIView):
             200: get_paginated_response_schema(
                 CategorySerializer, "Paginated list of categories"
             ),
-        }
+        },
     ),
     post=extend_schema(
         request=CreateCategorySerializer,
@@ -155,7 +159,7 @@ class CategoryDetail(AuthenticatedAPIView):
             200: get_paginated_response_schema(
                 OrderSerializer, "Paginated list of orders"
             ),
-        }
+        },
     ),
     post=extend_schema(
         request=CreateOrderSerializer,
@@ -188,11 +192,43 @@ class OrderList(AuthenticatedAPIView):
         else:
             logger.warning(f"No phone number for customer {order.customer.id}")
 
-        # Send an email to the admin
-        mail_admin.delay_on_commit(
-            f"New Order Placed.",
-            f"Order ID: {order.id} \n Total Price: {order.total_price}",
+        # Prepare email content
+        items = []
+        for item in order.orderitem_set.all():
+            items.append(
+                {
+                    "name": item.product.name,
+                    "quantity": item.quantity,
+                    "price": item.product.price,
+                    "total": item.product.price * item.quantity,
+                }
+            )
+
+        # Render HTML template for the email
+        html_content = render_to_string(
+            "email/order_confirmation.html",  # Path to your HTML template
+            {
+                "order_id": order.id,
+                "items": items,
+                "total_price": order.total_price,
+                "customer_name": f"{order.customer.user.first_name} {order.customer.user.last_name}",
+                "customer_phone": order.customer.phone_number,
+            },
         )
+
+        # Fallback text content for non-HTML email clients
+        text_content = strip_tags(html_content)
+
+        print("text_content", text_content)
+        print("html_content", html_content)
+
+        # Send the email
+        mail_admin.delay_on_commit(
+            subject="New Order Placed",
+            body=text_content,
+            html_message=html_content,
+        )
+
         return Response(
             self.serializer_class(order).data, status=status.HTTP_201_CREATED
         )
@@ -231,7 +267,7 @@ class OrderDetail(AuthenticatedAPIView):
             200: get_paginated_response_schema(
                 CustomerSerializer, "Paginated list of customers"
             ),
-        }
+        },
     ),
     post=extend_schema(
         request=CreateCustomerSerializer,
