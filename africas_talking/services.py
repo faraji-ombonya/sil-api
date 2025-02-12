@@ -6,6 +6,7 @@ from . import apis
 from .models import AfricasTalkingSMS
 from .types import SMSDeliveryReport
 
+
 logger = logging.getLogger(__name__)
 
 

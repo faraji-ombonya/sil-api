@@ -217,7 +217,7 @@ class OrderList(AuthenticatedAPIView):
         # Fallback text content for non-HTML email clients
         text_content = strip_tags(html_content)
 
-        # Send the email
+        # Send the email to the admin
         mail_admin.delay_on_commit(
             subject="New Order Placed",
             body=text_content,

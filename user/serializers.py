@@ -23,20 +23,13 @@ class UserSerializer(serializers.ModelSerializer):
 class LeanUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = [
-            "id",
-            "email",
-            "first_name",
-            "last_name",
-            "image",
-        ]
+        fields = ["id", "email", "first_name", "last_name", "image"]
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ["email", "password", "first_name", "last_name", "image"]
-
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
