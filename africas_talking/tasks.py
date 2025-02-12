@@ -1,3 +1,5 @@
+"""Tasks for the Africa's Talking Service."""
+
 from celery import shared_task
 
 from . import services

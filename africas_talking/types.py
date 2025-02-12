@@ -1,3 +1,5 @@
+"""Types for the Africas Talking API."""
+
 from typing import TypedDict, List
 
 

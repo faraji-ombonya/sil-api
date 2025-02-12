@@ -38,6 +38,7 @@ def get_signin_url(state: str, nonce: str) -> str:
 
     Args:
         state (str): The state to use for the signin URL.
+        nonce (str): The nonce to use for the signin URL.
 
     Returns:
         The signin URL.
