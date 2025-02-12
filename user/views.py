@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from user.serializers import CreateUserSerializer, UserSerializer
 from user.models import User
 from utils.pagination import StandardPagination
-from utils.open_api import get_paginated_response_schema
+from utils.open_api import get_paginated_response_schema, page, per_page
 
 
 class AuthenticatedAPIView(APIView):
@@ -17,11 +17,12 @@ class AuthenticatedAPIView(APIView):
 @extend_schema(tags=["User"])
 @extend_schema_view(
     get=extend_schema(
+        parameters=[page, per_page],
         responses={
             200: get_paginated_response_schema(
                 UserSerializer, "Paginated list of users"
             ),
-        }
+        },
     ),
 )
 class UserList(AuthenticatedAPIView):

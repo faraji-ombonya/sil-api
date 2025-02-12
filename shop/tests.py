@@ -1,7 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from django.utils.html import strip_tags
-from django.template.loader import render_to_string
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 from unittest.mock import patch
